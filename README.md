@@ -1,7 +1,7 @@
 
 # Endless' Blog
 
-This a personal blog with articles on technical stuff. I hope you enjoy your time here.
+This is my personal blog with articles on technical stuff. I hope you enjoy your time here.
 
 **Note: Everything hosted every is provided "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED.**
 
@@ -11,4 +11,4 @@ This a personal blog with articles on technical stuff. I hope you enjoy your tim
 
 ## Contact
 
-You can contact me via E-mail or via Discord. (username: `Endless#5169`)
+You can contact me via E-mail or via Discord (username: `Endless#5169`).
