@@ -3,7 +3,7 @@
 
 This a personal blog with articles on technical stuff. I hope you enjoy your time here.
 
-**Note: Everything hosted every is provided "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED.
+**Note: Everything hosted every is provided "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED.**
 
 ## Articles
 
