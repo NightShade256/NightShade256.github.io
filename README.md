@@ -1,9 +1,6 @@
+# Welcome
 
-# Endless' Blog
-
-This is my personal blog with articles on technical stuff. I hope you enjoy your time here.
-
-**Note: Everything hosted here is provided "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED.**
+I hope you enjoy your time here!
 
 ## Articles
 

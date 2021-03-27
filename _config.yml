@@ -1,1 +1,6 @@
+# The only good theme among the options.
 theme: jekyll-theme-hacker
+
+# Custom title and description.
+title: Endless' Blog
+description: My personal blog with articles on technical stuff.
