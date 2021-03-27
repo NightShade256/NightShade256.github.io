@@ -7,7 +7,7 @@ This a personal blog with articles on technical stuff. I hope you enjoy your tim
 
 ## Articles
 
-27/03/2021 - [Game Boy Sound Emulation](sound_emulation)
+27/03/2021 - [Game Boy Sound Emulation](gb/sound_emulation)
 
 ## Contact
 
