@@ -82,6 +82,29 @@ Amplitude = WAVE_DUTY_TABLE[WAVE_DUTY_PATTERN][WAVE_DUTY_POSITION]
 
 Note: `WAVE_DUTY_TABLE` is the one given above.
 
+## Frame Sequencer
+
+The frame sequencer (FS) is a component of the audio system which generates clocks
+for other units (Sweep, Envelope and Length).
+
+Every `8192` T-cycles (512 Hz) the FS is stepped, and it _might_ clock other units. There is
+a nice table from the `gbdev` wiki which shows which unit is clocked and when it is clocked.
+
+```ascii
+Step   Length Ctr  Vol Env     Sweep
+---------------------------------------
+0      Clock       -           -
+1      -           -           -
+2      Clock       -           Clock
+3      -           -           -
+4      Clock       -           -
+5      -           -           -
+6      Clock       -           Clock
+7      -           Clock       -
+---------------------------------------
+Rate   256 Hz      64 Hz       128 Hz
+```
+
 ## Envelope Function
 
 Envelope is a way to adjust the volume of a channel periodically.
@@ -291,6 +314,29 @@ particular threshold (let us say 1024 samples) and then queue these newly genera
 and then clear the buffer. We can then repeat these steps again and again. This also provides a natural
 way to accurately sync the emulation.
 
-## The End
+## Further Reading
 
-Written By - NightShade256 (Endless)
+### Related to Sound on the Game Boy
+
+1. [Pan Docs](https://gbdev.io/pandocs/#sound-controller)
+2. [gbdev Wiki](https://gbdev.gg8.se/wiki/articles/Gameboy_sound_hardware)
+3. [GBSOUND.txt](https://github.com/bwhitman/pushpin/blob/master/src/gbsound.txt)
+4. [GhostSonic's post on Reddit](https://www.reddit.com/r/EmuDev/comments/5gkwi5/gb_apu_sound_emulation/dat3zni/)
+
+### General Documentation of the Game Boy
+
+1. [GBEDG](https://hacktix.github.io/GBEDG/)
+
+This blog was partly inspired by `GBEDG`.
+
+## In The End
+
+I hope this article was helpful to you in building your emulator.
+
+I would like to thank my friends over at r/EmuDev and the Discord server for their help. I would especially like
+to thank Simuuz and Dillon without whose words of encouragement I would never have implemented audio in my own
+emulator and therefore would not have written this article.
+
+I would also like to thank you, my friend, for reading this article.
+
+Cheers!
