@@ -374,8 +374,8 @@ if frequency_timer == 0 {
 
 The amplitude of the channel is simply the 0th bit of LFSR inverted. (Take into account envelope of-course).
 
-```python
-Amplitude = (!LFSR) & 0x01
+```js
+Amplitude = ~LFSR & 0x01;
 ```
 
 On a trigger event, all the bits of LFSR are set to 1.
