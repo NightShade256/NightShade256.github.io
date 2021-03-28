@@ -4,7 +4,14 @@ I hope you enjoy your time here!
 
 ## Articles
 
-27/03/2021 - [Game Boy Sound Emulation](gb/sound_emulation)
+<ul>
+    {% for post in site.posts %}
+        <li>
+            {{ post.date }} - <a href="{{ post.url }}">{{ post.title }}</a>
+            {{ post.excerpt }}
+        </li>
+    {% endfor %}
+</ul>
 
 In case of any factual or grammatical error, please open an issue.
 
