@@ -389,8 +389,8 @@ In pseudo-code, panning could look like this,
 ```js
 // Assume that we are working with the Left stereo channel.
 
-// NR51 bit 1 controls the panning of channel 2 to left channel.
-if (nr51 & 0x02) != 0 {
+// NR51 bit 5 controls the panning of channel 2 to left channel.
+if (nr51 & 0x20) != 0 {
     amplitude = channel_two_amp
 } else {
     amplitude = 0
