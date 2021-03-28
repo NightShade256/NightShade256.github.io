@@ -1,4 +1,9 @@
-﻿# Game Boy Sound Emulation
+﻿---
+layout: post
+
+# Post metadata
+title: Game Boy Sound Emulation
+---
 
 This is a short, but complete article on the Game Boy sound hardware with the perspective of emulating it.
 
