@@ -9,3 +9,6 @@ description: My personal blog with articles on technical stuff.
 
 # Don't want README to be included in the blog.
 exclude: [README.md]
+
+# Switch timezone to IST.
+timezone: Asia/Kolkata
