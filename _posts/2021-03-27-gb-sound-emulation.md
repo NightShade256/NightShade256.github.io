@@ -6,6 +6,9 @@ title: Game Boy Sound Emulation
 
 # My first article :)
 author: Endless (Anish Jewalikar)
+
+# Post Tags.
+tags: emulation gameboy sound
 ---
 
 This is a short, but complete article on the Game Boy sound hardware with the perspective of emulating it.
