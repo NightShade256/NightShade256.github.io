@@ -283,6 +283,103 @@ the channel is disabled until the next trigger event.
 
 On a trigger event, the length timer is loaded again with the above formula.
 
+## Channel Three
+
+We now come on to channel three. It is also really simple to understand and you won't have a problem.
+
+In channels one and two we played back predefined square waves at custom frequencies, in channel three
+instead of playing predetermined sequences the ROM instead provides `32` 4-bit custom samples for us
+to playback.
+
+These 4-bit samples are stored in a region called the Wave RAM. This region is located at `$FF30-$FF3F`.
+
+It is a 16 byte region, therefore there are two samples contained within one byte. We play the first four
+bits of a byte before the next four.
+
+This channel also provides a volume shift register. This register specifies the amount by which the samples
+are shifted to the right before being played back (essentially controlling volume).
+
+The table given below matches the bit pattern stored in that register to the actual shift amount.
+
+```ascii
+    0b00 => 4
+    0b01 => 0
+    0b10 => 1
+    0b11 => 2
+```
+
+This channel as all other channels does have a length function, but no envelope and sweep.
+
+## Channel Four
+
+Channel four is configured to output white noise with envelope.
+
+It has two new registers, the LFSR (Linear Feedback Shift Register) and the polynomial counter. The LFSR is
+15 bits long.
+
+The polynomial register is the control centre of this channel. The following parameters are supplied
+by the register,
+
+1. The amount the divisor need to be shifted (bits 7-4)
+2. Width of the counter (bit 3)
+3. The base divisor code (bits 2-0)
+
+The frequency timer of this channel is calculated a bit differently,
+
+```python
+Frequency Timer = Divisor << Shift Amount
+```
+
+The divisor code is mapped to the actual divisor as follows,
+
+```ascii
+Divisor code   Divisor
+-----------------------
+   0             8
+   1            16
+   2            32
+   3            48
+   4            64
+   5            80
+   6            96
+   7           112
+```
+
+The second parameter controls the "regularity" of the channel, as if enabled the output of the
+channel becomes more regular and resembles a tone.
+
+Whenever the frequency timer expires the following operations take place,
+
+1. The frequency timer is reloaded using the above formula.
+2. The XOR result of the 0th and 1st bit os LFSR is computed.
+3. The LFSR is shifted right by one bit and the above XOR result is
+   stored in the 15th bit.
+4. If the width mode bit is set, the XOR result is also stored in the 6th bit.
+
+In pseudo-code,
+
+```js
+if frequency_timer == 0 {
+    frequency_timer = (divisor_code > 0 ? (divisor_code << 4) : 8) << shift_amount
+
+    xor_result = (LFSR & 0b01) ^ ((LFSR & 0b10) >> 1)
+    LFSR = (LFSR >> 1) | (xor_result << 14)
+
+    if width_mode == 1 {
+        LFSR &= !(1 << 6)
+        LFSR |= xor_result << 6
+    }
+}
+```
+
+The amplitude of the channel is simply the 0th bit of LFSR inverted. (Take into account envelope of-course).
+
+```python
+Amplitude = (!LFSR) & 0x01
+```
+
+On a trigger event, all the bits of LFSR are set to 1.
+
 ## Providing Samples to the Audio Device
 
 Let assume that you maintain a buffer of size `1024` which contains 512 samples of stereo PCM data. (32-bit float PCM).
@@ -328,6 +425,15 @@ way to accurately sync the emulation.
 1. [GBEDG](https://hacktix.github.io/GBEDG/)
 
 This blog was partly inspired by `GBEDG`.
+
+### Other Emulators
+
+1. [Argentum GB](https://github.com/NightShade256/argentum-gb) (My own emulator, not very accurate)
+2. [CryBoy](https://github.com/mattrberry/CryBoy) (Matthew Berry's emulator, bit more accurate)
+3. [SameBoy](https://github.com/LIJI32/SameBoy) (LIJI's emulator, the most accurate emulator around)
+
+You can look at the source code of these emulators as a reference. There are a ton more emulators
+with audio so you can search on GitHub if you need more reference material.
 
 ## In The End
 
