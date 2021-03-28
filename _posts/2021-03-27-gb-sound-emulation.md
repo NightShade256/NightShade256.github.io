@@ -3,6 +3,9 @@ layout: post
 
 # Post metadata
 title: Game Boy Sound Emulation
+
+# My first article :)
+author: Endless (Anish Jewalikar)
 ---
 
 This is a short, but complete article on the Game Boy sound hardware with the perspective of emulating it.

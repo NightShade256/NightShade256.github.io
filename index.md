@@ -13,7 +13,7 @@ I hope you enjoy your time here!
     {% endfor %}
 </ul>
 
-In case of any factual or grammatical error, please open an issue.
+**Note: In case of any factual or grammatical error, please open an issue.**
 
 ## Contact
 

@@ -1,6 +1,11 @@
 # The only good theme among the options.
 theme: jekyll-theme-hacker
 
-# Custom title and description.
+# Custom blog title.
 title: Endless' Blog
+
+# Custom blog description.
 description: My personal blog with articles on technical stuff.
+
+# Don't want README to be included in the blog.
+exclude: [README.md]
