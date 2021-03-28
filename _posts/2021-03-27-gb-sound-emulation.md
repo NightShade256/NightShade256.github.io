@@ -292,7 +292,8 @@ is set, the length timer is decremented by one.
 If the length timer, (only) as a result of the above decrement reaches the value of zero then
 the channel is disabled until the next trigger event.
 
-On a trigger event, the length timer is loaded again with the above formula.
+On a trigger event, the length timer is loaded with the value 64 or 256 (channel three only) if
+the length timer is equal to zero.
 
 ## Channel Three
 
