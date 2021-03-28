@@ -293,8 +293,8 @@ to playback.
 
 These 4-bit samples are stored in a region called the Wave RAM. This region is located at `$FF30-$FF3F`.
 
-It is a 16 byte region, therefore there are two samples contained within one byte. We play the first four
-bits of a byte before the next four.
+It is a 16 byte region, therefore there are two samples contained within one byte. We play the upper four
+bits of a byte before the lower four.
 
 This channel also provides a volume shift register. This register specifies the amount by which the samples
 are shifted to the right before being played back (essentially controlling volume).
@@ -380,6 +380,39 @@ Amplitude = (!LFSR) & 0x01
 
 On a trigger event, all the bits of LFSR are set to 1.
 
+## Simple Mixing and Panning
+
+The NR51 specifies where the Game Boy sound channels are panned.
+
+In pseudo-code, panning could look like this,
+
+```js
+// Assume that we are working with the Left stereo channel.
+
+// NR51 bit 1 controls the panning of channel 2 to left channel.
+if (nr51 & 0x02) != 0 {
+    amplitude = channel_two_amp
+} else {
+    amplitude = 0
+}
+```
+
+While simple mixing is just averaging the amplitudes (panning comes before mixing).
+
+```js
+Left Sample = (ch1 + ch2 + ch3 + ch4) / 4.0
+```
+
+## NR52
+
+The NR52 can be thought of as the master switch.
+
+If the bit 7 of NR52 is reset, then all of the sound system is immediately shut off. This has the benefit that
+if a game doesn't support audio, then switching off the audio system saves power.
+
+The bottom four bits of the register are the individual channel status bits, and are read only. They describe
+whether the respective channel is enabled or disabled.
+
 ## Providing Samples to the Audio Device
 
 Let assume that you maintain a buffer of size `1024` which contains 512 samples of stereo PCM data. (32-bit float PCM).
@@ -394,22 +427,24 @@ Suppose that the sample rate of the audio device is 48000 Hz (48kHz). It means t
 pushed to the audio device every second.
 
 Each `CPU FREQUENCY / SAMPLE RATE` T-cycles (roughly 87 T-cycles in this case) we get the
-amplitude from each channel and mix the amplitude into one by just simply averaging them.
+amplitude from each channel and mix them (see above section).
 
 We then use the volume values in NR50 to generate two samples,
 
 ```python
-Left Sample = Left Volume (in NR50) * Average Amplitude
+Left Sample = Left Volume (in NR50) * Left Amplitude
 
-Right Sample = Right Volume (in NR50) * Average Amplitude
+Right Sample = Right Volume (in NR50) * Right Amplitude
 ```
 
 We then interleave those samples in the audio buffer as we described earlier.
 
-As soon as the audio buffer is full, we wait until the already queued bytes are below a
-particular threshold (let us say 1024 samples) and then queue these newly generated samples
-and then clear the buffer. We can then repeat these steps again and again. This also provides a natural
-way to accurately sync the emulation.
+We only run the emulator until the audio buffer is full. We then delay until the already queued samples
+are below a particular threshold (let us say 1 buffer in length) queue these newly generated
+samples and clear our audio buffer. We repeat these steps again and again.
+
+This provides a natural way to accurately synchronize the emulation, while minimizing audio
+cracks and pops. (But this might increase screen tearing as we disable V-Sync).
 
 ## Further Reading
 
