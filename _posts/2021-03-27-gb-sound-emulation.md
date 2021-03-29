@@ -157,7 +157,7 @@ if period != 0 {
     if period_timer == 0 {
         period_timer = period
 
-        if (period_timer < 0xF and is_upwards) or (period_timer > 0x0 and !is_upwards) {
+        if (current_volume < 0xF and is_upwards) or (current_volume > 0x0 and !is_upwards) {
             if is_upwards {
                 adjustment = +1
             } else {
@@ -363,7 +363,7 @@ channel becomes more regular and resembles a tone.
 Whenever the frequency timer expires the following operations take place,
 
 1. The frequency timer is reloaded using the above formula.
-2. The XOR result of the 0th and 1st bit os LFSR is computed.
+2. The XOR result of the 0th and 1st bit of LFSR is computed.
 3. The LFSR is shifted right by one bit and the above XOR result is
    stored in the 15th bit.
 4. If the width mode bit is set, the XOR result is also stored in the 6th bit.
