@@ -1,13 +1,7 @@
 ﻿---
 layout: post
-
-# Post metadata
 title: Game Boy Sound Emulation
-
-# My first article :)
-author: Endless (Anish Jewalikar)
-
-# Post Tags.
+author: Endless
 tags: emulation gameboy sound
 ---
 
