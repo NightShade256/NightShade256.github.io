@@ -14,7 +14,3 @@ I hope you enjoy your time here!
 </ul>
 
 **Note: In case of any factual or grammatical error, please open an issue.**
-
-## Contact
-
-You can contact me via E-mail or via Discord (username: `Endless#5169`).
