@@ -359,7 +359,7 @@ Whenever the frequency timer expires the following operations take place,
 1. The frequency timer is reloaded using the above formula.
 2. The XOR result of the 0th and 1st bit of LFSR is computed.
 3. The LFSR is shifted right by one bit and the above XOR result is
-   stored in the 15th bit.
+   stored in the 14th bit.
 4. If the width mode bit is set, the XOR result is also stored in the 6th bit.
 
 In pseudo-code,
