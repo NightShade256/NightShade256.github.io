@@ -110,6 +110,10 @@ Step   Length Ctr  Vol Env     Sweep
 Rate   256 Hz      64 Hz       128 Hz
 ```
 
+The frame sequencer clocks are derived from the DIV timer. In Normal Speed Mode, falling edges of bit 5 step
+the FS while in CGB Double Speed Mode, bit 6 is used instead. Here bits 5 and 6 refer to the bits of the upper
+byte of DIV (internally DIV is 16 bit but only the upper 8 bits are mapped to memory).
+
 ## Envelope Function
 
 Envelope is a way to adjust the volume of a channel periodically.
