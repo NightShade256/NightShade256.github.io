@@ -2,10 +2,10 @@
 theme: jekyll-theme-hacker
 
 # Custom blog title.
-title: Endless' Blog
+title: NightShade's Blog
 
 # Custom blog description.
-description: My personal blog with articles on technical stuff.
+description: My personal blog where I write about stuff.
 
 # Don't want README to be included in the blog.
 exclude: [README.md]

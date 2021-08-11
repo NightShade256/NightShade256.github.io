@@ -1,6 +1,6 @@
-# Endless' Blog
+# NightShade's Blog
 
-My personal blog where I write about technical stuff.
+My personal blog where I write about stuff.
 
 All content on this site is covered under the MIT license.
 In short, you are free to copy, share and modify all of the content hosted here
