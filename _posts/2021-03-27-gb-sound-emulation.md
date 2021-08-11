@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: default
 title: Game Boy Sound Emulation
 tags: emulation gameboy sound
 ---
