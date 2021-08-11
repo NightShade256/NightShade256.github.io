@@ -1,7 +1,6 @@
 ---
 layout: post
 title: Game Boy Sound Emulation
-author: Endless
 tags: emulation gameboy sound
 ---
 
