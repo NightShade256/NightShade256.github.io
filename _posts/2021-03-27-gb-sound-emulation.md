@@ -4,6 +4,8 @@ title: Game Boy Sound Emulation
 tags: emulation gameboy sound
 ---
 
+# Game Boy Sound Emulation
+
 This is a short article on the Game Boy sound hardware with the perspective of emulating it.
 
 The objective of this article is to get your emulator to a state that sounds right,
