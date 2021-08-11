@@ -1,11 +1,14 @@
-﻿---
+---
 layout: post
 title: Game Boy Sound Emulation
 author: Endless
 tags: emulation gameboy sound
 ---
 
-This is a short, but complete article on the Game Boy sound hardware with the perspective of emulating it.
+This is a short article on the Game Boy sound hardware with the perspective of emulating it.
+
+The objective of this article is to get your emulator to a state that sounds right,
+but not pass all audio tests.
 
 ## Primer on Sound
 
@@ -46,15 +49,15 @@ __|^^^|______|^^^|__
 Let us assign the amplitude values of `1` to the peaks and `0` to the valleys. The channel can produce only one
 of these values as its output. (The envelope function complicates this a little bit).
 
-There are four, 8-length "wave pattern duties" of these square waves which are predetermined.
+There are four _wave pattern duties_ of these square waves which are predetermined.
 
 ```ascii
 Duty   Waveform    Ratio
 -------------------------
 0      00000001    12.5%
-1      10000001    25%
-2      10000111    50%
-3      01111110    75%
+1      00000011    25%
+2      00001111    50%
+3      11111100    75%
 ```
 
 The ratio is calculated as, `Ratio = (Time Peaked / Total Time) * 100`.
@@ -85,7 +88,7 @@ The wave duty position is just a pointer to one bit in the wave pattern duty cur
 Amplitude = WAVE_DUTY_TABLE[WAVE_DUTY_PATTERN][WAVE_DUTY_POSITION]
 ```
 
-Note: `WAVE_DUTY_TABLE` is the one given above.
+Note: `WAVE_DUTY_TABLE` here is wave patten duties table given above.
 
 ## Frame Sequencer
 
@@ -312,10 +315,12 @@ are shifted to the right before being played back (essentially controlling volum
 The table given below matches the bit pattern stored in that register to the actual shift amount.
 
 ```ascii
-    0b00 => 4
-    0b01 => 0
-    0b10 => 1
-    0b11 => 2
+Bit pattern   Shift Amount
+---------------------------
+   0            4
+   1            0
+   2            1
+   3            2
 ```
 
 This channel as all other channels does have a length function, but no envelope and sweep.
@@ -460,34 +465,30 @@ cracks and pops. (But this might increase screen tearing as we disable V-Sync).
 
 ### Related to Sound on the Game Boy
 
-1. [Pan Docs](https://gbdev.io/pandocs/#sound-controller)
-2. [gbdev Wiki](https://gbdev.gg8.se/wiki/articles/Gameboy_sound_hardware)
-3. [GBSOUND.txt](https://github.com/bwhitman/pushpin/blob/master/src/gbsound.txt)
-4. [GhostSonic's post on Reddit](https://www.reddit.com/r/EmuDev/comments/5gkwi5/gb_apu_sound_emulation/dat3zni/)
+1. [gbdev Wiki](https://gbdev.gg8.se/wiki/articles/Gameboy_sound_hardware)
+2. [GBSOUND.txt](https://github.com/bwhitman/pushpin/blob/master/src/gbsound.txt)
+3. [GhostSonic's post on Reddit](https://www.reddit.com/r/EmuDev/comments/5gkwi5/gb_apu_sound_emulation/dat3zni/)
 
 ### General Documentation of the Game Boy
 
 1. [GBEDG](https://hacktix.github.io/GBEDG/)
-
-This blog was partly inspired by `GBEDG`.
+2. [Pan Docs](https://gbdev.io/pandocs/)
 
 ### Other Emulators
 
-1. [Argentum GB](https://github.com/NightShade256/argentum-gb) (My own emulator, not very accurate)
+1. [Argentum GB](https://github.com/NightShade256/Argentum) (My own emulator, not very accurate)
 2. [CryBoy](https://github.com/mattrberry/CryBoy) (Matthew Berry's emulator, bit more accurate)
 3. [SameBoy](https://github.com/LIJI32/SameBoy) (LIJI's emulator, the most accurate emulator around)
 
-You can look at the source code of these emulators as a reference. There are a ton more emulators
-with audio so you can search on GitHub if you need more reference material.
+You can look at the source code of these emulators as a reference.
 
 ## In The End
 
 I hope this article was helpful to you in building your emulator.
 
-I would like to thank my friends over at r/EmuDev and the Discord server for their help. I would especially like
-to thank Simuuz and Dillon without whose words of encouragement I would never have implemented audio in my own
-emulator and therefore would not have written this article.
+I would like to thank the people over at r/EmuDev and the Discord server for their help,
+especially Simuuz and Dillon.
 
-I would also like to thank you, my friend, for reading this article.
+I would also like to thank you for reading this article.
 
 Cheers!
