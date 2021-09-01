@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Game Boy Sound Emulation
-tags: emulation gameboy sound
+tags: emulation game-boy sound
 ---
 
 # Game Boy Sound Emulation
