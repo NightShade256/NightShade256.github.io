@@ -137,5 +137,7 @@ If you want to check out Cobalt, you can do so [here](https://github.com/NightSh
 
 Cheers!
 
+## Footnotes
+
 [^1]: The processor is not an Intel 8080 or a Zilog Z80 as is widely misbelieved.
 [^2]: The internal clock is timed at 4 Mhz, but all CPU operations take a multiple of 4 clock cycles.
