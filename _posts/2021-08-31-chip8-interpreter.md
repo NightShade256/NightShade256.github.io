@@ -35,10 +35,10 @@ common sweet spot.
 Quoting from Wikipedia (again),
 
 ```ascii
-The Game Boy is an 8-bit handheld game console developed and manufactured by Nintendo. The first handheld in the Game 
-Boy family, it was first released in Japan on April 21, 1989. The console was released in North America later the 
-same year, then in Europe in late 1990. It was designed by the same team that developed the Game & Watch series of 
-handheld electronic games and several Nintendo Entertainment System games: Satoru Okada, Gunpei Yokoi, and Nintendo 
+The Game Boy is an 8-bit handheld game console developed and manufactured by Nintendo. The first handheld in the Game
+Boy family, it was first released in Japan on April 21, 1989. The console was released in North America later the
+same year, then in Europe in late 1990. It was designed by the same team that developed the Game & Watch series of
+handheld electronic games and several Nintendo Entertainment System games: Satoru Okada, Gunpei Yokoi, and Nintendo
 Research & Development 1.
 ```
 
@@ -50,11 +50,11 @@ similar to the NES.
 
 The biggest hurdle actually came before any code was ever written!
 
-The Game Boy is quite puny compared to modern computers, even a cheap Raspberry Pi is thousands of times faster. This 
-also means that using the least amount of CPU cycles and memory is of utmost importance. This in effect severely 
+The Game Boy is quite puny compared to modern computers, even a cheap Raspberry Pi is thousands of times faster. This
+also means that using the least amount of CPU cycles and memory is of utmost importance. This in effect severely
 restricts the performance of stack based languages like C.
 
-The only realistic option here was to use raw Game Boy assembly, with an assembler like `RGBDS` or `WLA-DX`. I went 
+The only realistic option here was to use raw Game Boy assembly, with an assembler like `RGBDS` or `WLA-DX`. I went
 with `RGBDS` since that is what most projects use.
 
 This was a huge challenge since I didn't have much prior experience writing assembly for any particular platform.
@@ -76,9 +76,9 @@ For Example:
 10101010 01010101 -> 10 01 10 01 10 01 10 01
 ```
 
-There is no way to use a frame buffer, which makes dynamic drawing with pixel-granularity a bit of a hassle. Another 
-problem is that a Chip-8 sprite can span up to four tiles making drawing even harder. What's more is that Chip-8 
-expects all draw calls to instantly take effect, while the Game Boy only supports accessing VRAM at certain fixed 
+There is no way to use a frame buffer, which makes dynamic drawing with pixel-granularity a bit of a hassle. Another
+problem is that a Chip-8 sprite can span up to four tiles making drawing even harder. What's more is that Chip-8
+expects all draw calls to instantly take effect, while the Game Boy only supports accessing VRAM at certain fixed
 times.
 
 One might then naively perform the following calculation,
@@ -113,7 +113,7 @@ M-cycles (assuming rendering without sprites and scrolling), making it possible 
 per HBlank. There are `144` scan lines in one frame, but copying `256` bytes only actually requires `128` HBlank(s)
 if `2` bytes are copied each time!
 
-I quickly started writing out the implementation. The Game Boy provides us with the LCD STAT interrupt which you can
+I quickly started writing out the implementation. The Game Boy provides us with the LCD STAT interrupt which we can
 setup to trigger at the start of HBlank. Using that I was able to write a simple working implementation in no time.
 It worked as expected and was reasonably fast.
 
@@ -122,7 +122,7 @@ It worked as expected and was reasonably fast.
 Chip-8 is unique in the respect that it accepts input using a keypad with a total of `16` keys. The Game Boy only has
 `8` physical keys (which includes the A, B, Select, Start buttons). This is the point where there is no easy solution.
 You can implement a scheme where pressing two-buttons would correspond to a unique Chip-8 key, but this is a lot more
-difficult to implement with no real benefit since a majority of Chip-8 games don't actually utilize the full `16` 
+difficult to implement with no real benefit since a majority of Chip-8 games don't actually utilize the full `16`
 keys.
 
 So I just mapped the four Game Boy DPAD keys to four Chip-8 keys and then left it as is, and it works for a majority
