@@ -35,7 +35,11 @@ common sweet spot.
 Quoting from Wikipedia (again),
 
 ```ascii
-The Game Boy is an 8-bit handheld game console developed and manufactured by Nintendo. The first handheld in the Game Boy family, it was first released in Japan on April 21, 1989. The console was released in North America later the same year, then in Europe in late 1990. It was designed by the same team that developed the Game & Watch series of handheld electronic games and several Nintendo Entertainment System games: Satoru Okada, Gunpei Yokoi, and Nintendo Research & Development 1.
+The Game Boy is an 8-bit handheld game console developed and manufactured by Nintendo. The first handheld in the Game 
+Boy family, it was first released in Japan on April 21, 1989. The console was released in North America later the 
+same year, then in Europe in late 1990. It was designed by the same team that developed the Game & Watch series of 
+handheld electronic games and several Nintendo Entertainment System games: Satoru Okada, Gunpei Yokoi, and Nintendo 
+Research & Development 1.
 ```
 
 The Game Boy on the other hand is much more powerful, with a Sharp SM83 CPU[^1] clocked at roughly 1 MHz[^2]. It
