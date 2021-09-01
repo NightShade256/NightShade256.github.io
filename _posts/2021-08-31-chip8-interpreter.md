@@ -52,7 +52,7 @@ The biggest hurdle actually came before any code was ever written!
 
 The Game Boy is quite puny compared to modern computers, even a cheap Raspberry Pi is thousands of times faster. This
 also means that using the least amount of CPU cycles and memory is of utmost importance. This in effect severely
-restricts the performance of stack based languages like C.
+restricts the performance of stack based languages like C[^3].
 
 The only realistic option here was to use raw Game Boy assembly, with an assembler like `RGBDS` or `WLA-DX`. I went
 with `RGBDS` since that is what most projects use.
@@ -137,7 +137,13 @@ If you want to check out Cobalt, you can do so [here](https://github.com/NightSh
 
 Cheers!
 
+## Further Reading
+
+If you are interested in reading more about the Game Boy's architecture, you can checkout this fantastic
+[article](https://www.copetti.org/writings/consoles/game-boy/).
+
 ## Footnotes
 
 [^1]: The processor is not an Intel 8080 or a Zilog Z80 as is widely misbelieved.
 [^2]: The internal clock is timed at 4 Mhz, but all CPU operations take a multiple of 4 clock cycles.
+[^3]: You can read more about this topic [here](https://gbdev.io/guides/tools.html#c).
