@@ -66,14 +66,14 @@ out to be extremely hard.
 
 The Game Boy uses a tile based rendering system. A group of 8 x 8 pixels is called a _tile_. Tiles are then grouped
 together in VRAM to produce _tile maps_. Each row of a tile is represented by two bytes making a tile sixteen bytes in
-size. The first byte of a row contains the top bit of the colour of the pixel, and the second byte contains the
-bottom bit.
+size. The first byte of a row contains the bottom bit of the colour of the pixel, and the second byte contains the
+top bit.
 
 ```ascii
 For Example:
 
     Row Bytes             Actual Colours
-10101010 01010101 -> 10 01 10 01 10 01 10 01
+10101010 01010101 -> 01 10 01 10 01 10 01 10
 ```
 
 There is no way to use a frame buffer, which makes dynamic drawing with pixel-granularity a bit of a hassle. Another
