@@ -139,7 +139,7 @@ Cheers!
 
 ## Further Reading
 
-If you are interested in reading more about the Game Boy's architecture, you can checkout this fantastic
+If you are interested in reading more about the Game Boy's architecture, you can check out this fantastic
 [article](https://www.copetti.org/writings/consoles/game-boy/).
 
 ## Footnotes
