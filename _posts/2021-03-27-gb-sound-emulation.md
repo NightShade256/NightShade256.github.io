@@ -190,7 +190,7 @@ This section also applies verbatim to channel one and channel four. (Channel thr
 
 Sweep is a way to adjust the frequency of a channel periodically. It is controlled by the NR10 register for channel one. (None of the other channels have a sweep unit).
 
-The register provides the following values to the envelope function,
+The register provides the following values to the sweep function,
 
 1. The period in which one sweep step should take place (bits 6-4)
 2. The direction of the sweep function (bit 3)
