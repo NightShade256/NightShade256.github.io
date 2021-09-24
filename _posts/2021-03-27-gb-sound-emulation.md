@@ -444,6 +444,17 @@ samples and clear our audio buffer. We repeat these steps again and again.
 This provides a natural way to accurately synchronize the emulation, while minimizing audio
 cracks and pops. (But this might increase screen tearing as we disable V-Sync).
 
+## In The End
+
+I hope this article was helpful to you in building your emulator.
+
+I would like to thank the people over at r/EmuDev and the Discord server for their help,
+especially Simuuz and Dillon.
+
+I would also like to thank you for reading this article.
+
+Cheers!
+
 ## Further Reading
 
 ### Related to Sound on the Game Boy
@@ -464,17 +475,6 @@ cracks and pops. (But this might increase screen tearing as we disable V-Sync).
 3. [SameBoy](https://github.com/LIJI32/SameBoy) (LIJI's emulator, the most accurate emulator around)
 
 You can look at the source code of these emulators as a reference.
-
-## In The End
-
-I hope this article was helpful to you in building your emulator.
-
-I would like to thank the people over at r/EmuDev and the Discord server for their help,
-especially Simuuz and Dillon.
-
-I would also like to thank you for reading this article.
-
-Cheers!
 
 ## Footnotes
 
