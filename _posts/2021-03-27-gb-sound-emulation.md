@@ -6,23 +6,21 @@ tags: emulation game-boy sound
 
 # Game Boy Sound Emulation
 
-This is a short article on the Game Boy sound hardware with the perspective of emulating it.
-
-The objective of this article is to get your emulator to a state that sounds right,
-but not pass all audio tests.
+This is a short article on the Game Boy sound hardware with the perspective of emulating it. The aim of this
+article is to get your emulator to a state which sounds right, but not necessarily pass all sound tests.
 
 ## Primer on Sound
 
 Before we start to look at things specific to the Game Boy, you must know the basics about sound.
-
 A great resource to learn these elementary things is the video by the people at
-[xiph.org](https://xiph.org/video/vid1.shtml)
+[xiph.org](https://xiph.org/video/vid1.shtml).
 
 After watching the section on audio, you can continue reading below.
 
-## Sound on the Game Boy
+## Small Overview of Sound Hardware
 
-The Game Boy has four distinct audio channels and can output stereo sound. These channels are described below,
+The Game Boy has four distinct audio channels which can output stereo sound[^1]. These channels are listed
+below,
 
 1. Square Wave (Envelope and Sweep)
 2. Square Wave (Envelope)
@@ -39,18 +37,16 @@ We will now take a look at the channel two audio, as it is the simplest to under
 
 ## Channel Two
 
-The Game Boy sound channel two produces square waves.
-
-A square wave is a sound wave with two distinct amplitudes. The wave has peaks and valleys.
+The Game Boy sound channel two produces square waves. A square wave is a sound wave with two distinct amplitudes.
+The wave has peaks and valleys.
 
 ```ascii
-__|^^^|______|^^^|__
+___|^^^|______|^^^|___
 ```
 
 Let us assign the amplitude values of `1` to the peaks and `0` to the valleys. The channel can produce only one
-of these values as its output. (The envelope function complicates this a little bit).
-
-There are four _wave pattern duties_ of these square waves which are predetermined.
+of these values as its output[^2]. There are four _wave pattern duties_ of these square waves, which are
+_predetermined_.
 
 ```ascii
 Duty   Waveform    Ratio
@@ -61,11 +57,12 @@ Duty   Waveform    Ratio
 3      11111100    75%
 ```
 
-The ratio is calculated as, `Ratio = (Time Peaked / Total Time) * 100`.
+You can select any one of these duties by writing the duty number to the bits `7-6` in the `NR21` register. The
+channel has two elementary associated values called the _frequency timer_ and the _wave duty position_.
 
-These are the only wave pattern duties which can be used with channel one and two. You can select one of these duties by writing the duty number to the bits `7-6` in NR21.
-
-The channel two has two elementary registers called the frequency timer and the wave duty position.
+The role of frequency timer is to step wave generation. Each T-cycle the frequency timer is decremented by `1`. As
+soon as it reaches `0`, it is reloaded with a value calculated using the below formula, and the wave duty position
+register is incremented by `1`.
 
 The frequency timer is calculated with the following formula,
 
@@ -73,30 +70,20 @@ The frequency timer is calculated with the following formula,
 Frequency Timer = (2048 - Frequency) * 4;
 ```
 
-Here, the `Frequency` variable is provided by NR23 and NR24.
-
-The role of frequency timer is to step wave generation. Each T-cycle the frequency timer is decremented by 1. As soon as it reaches 0, it is reloaded with a value calculated using the above formula, and the wave duty position register is incremented by 1.
-
-```python
-Wave Duty Position = (Current Position + 1) % 8;
-```
-
-Note: The wave duty position is wrapped back to `0` when it goes above `7`.
-
-The wave duty position is just a pointer to one bit in the wave pattern duty currently selected. So when you try to get the amplitude of this channel, it can be easily calculated as,
+Here, the value of the `Frequency` variable is provided by the NR23 and NR24 registers. The wave duty position is
+just a pointer to one bit in the wave pattern duty currently selected. So when you try to get the amplitude of
+this channel, it can be easily calculated as,
 
 ```python
 Amplitude = WAVE_DUTY_TABLE[WAVE_DUTY_PATTERN][WAVE_DUTY_POSITION]
 ```
 
-Note: `WAVE_DUTY_TABLE` here is wave patten duties table given above.
+**Note:** The wave duty position is wrapped back to `0` when it goes above `7`.
 
 ## Frame Sequencer
 
-The frame sequencer (FS) is a component of the audio system which generates clocks
-for other units (Sweep, Envelope and Length).
-
-Every `8192` T-cycles (512 Hz) the FS is stepped, and it _might_ clock other units. There is
+The frame sequencer (FS) is a component of the audio system which generates clocks for other units (Sweep,
+Envelope and Length). Every `8192` T-cycles (`512` Hz) the FS is stepped, and it _might_ clock other units. There is
 a nice table from the `gbdev` wiki which shows which unit is clocked and when it is clocked.
 
 ```ascii
@@ -114,31 +101,34 @@ Step   Length Ctr  Vol Env     Sweep
 Rate   256 Hz      64 Hz       128 Hz
 ```
 
-The frame sequencer clocks are derived from the DIV timer. In Normal Speed Mode, falling edges of bit 5 step
-the FS while in CGB Double Speed Mode, bit 6 is used instead. Here bits 5 and 6 refer to the bits of the upper
-byte of DIV (internally DIV is 16 bit but only the upper 8 bits are mapped to memory).
+The frame sequencer clocks are derived from the `DIV` timer. In Normal Speed Mode, falling edges of bit `5` step
+the FS while in CGB Double Speed Mode, bit `6` is used instead. Here bits `5` and `6` refer to the bits of the
+upper byte of DIV (internally DIV is `16` bit but only the upper `8` bits are mapped to memory).
 
 ## Envelope Function
 
-Envelope is a way to adjust the volume of a channel periodically.
-
-The NRx2 registers (NR12, NR22, NR42) control the the envelope function for that specific channel.
+Envelope is a way to adjust the volume of a channel periodically. The NRx2 registers (NR12, NR22, NR42) control
+the the envelope function for that specific channel.
 
 The register provides the following values to the envelope function,
 
-1. The initial volume of the channel (bits 7-4)
-2. The direction of the envelope function (bit 3)
-3. The period in which one envelope step should take place (bits 2-0)
+1. The initial volume of the channel (bits `7-4`)
+2. The direction of the envelope function (bit `3`)
+3. The period in which one envelope step should take place (bits `2-0`)
 
 Now, what do these values mean exactly?
 
-The first parameter is self-describing, it is the initial volume of the channel which will be adjusted periodically. The second parameter is easy to understand as well, it tells in which direction the envelope will take place (that is will the volume be incremented or decremented). The third parameter specifies the amount of volume clocks the frame sequencer needs to provide for an envelope step to take place.
+The first parameter is self-describing, it is the initial volume of the channel which will be adjusted
+periodically. The second parameter is easy to understand as well, it tells in which direction the envelope will
+take place (that is will the volume be incremented or decremented). The third parameter specifies the amount of
+volume clocks the frame sequencer needs to provide for an envelope step to take place.
 
 In addition to the above, we maintain two extra values called the period timer and the current volume.
 
 How do all these tie together then?
 
-On a trigger event, (event where the bit 7 of NRx4 is enabled), the internal period timer is loaded with the third parameter of NRx2, and the current volume register is loaded with the first parameter.
+On a trigger event, (event where the bit `7` of NRx4 is enabled), the internal period timer is loaded with the
+third parameter of NRx2, and the current volume register is loaded with the first parameter.
 
 Now on a volume clock from the frame sequencer the following steps take place,
 
@@ -146,7 +136,8 @@ Now on a volume clock from the frame sequencer the following steps take place,
 2. If the period timer is a non-zero value, decrement it.
 3. Now, if due to the previous step, the period timer becomes zero only then continue with step 4.
 4. Reload the period timer with the period (parameter 3).
-5. If the current volume is below `0xF` and the envelope direction is upwards or if the current volume is above `0x0` and envelope direction is downwards, we increment or decrement the current volume respectively.
+5. If the current volume is below `0xF` and the envelope direction is upwards or if the current volume is above
+   `0x0` and envelope direction is downwards, we increment or decrement the current volume respectively.
 
 All of the steps, in pseudo-code:
 
@@ -190,18 +181,18 @@ This section also applies verbatim to channel one and channel four. (Channel thr
 
 Sweep is a way to adjust the frequency of a channel periodically. It is controlled by the NR10 register for channel one. (None of the other channels have a sweep unit).
 
-The register provides the following values to the sweep function,
+The register provides the following values to the envelope function,
 
-1. The period in which one sweep step should take place (bits 6-4)
-2. The direction of the sweep function (bit 3)
-3. The amount by which the shadow frequency should be shifted (bits 2-0)
+1. The period in which one sweep step should take place (bits `6-4`)
+2. The direction of the sweep function (bit `3`)
+3. The amount by which the shadow frequency should be shifted (bits `2-0`)
 
-The first parameter specifies the amount of sweep clocks the frame sequencer needs to
-provide for an sweep step to take place. The second parameter is similar to the envelope
-direction, it specifies whether the frequency will increase or decrease over time. The third
-parameter specifies the value by which the previous frequency will shifted to get a new frequency.
+The first parameter specifies the amount of sweep clocks the frame sequencer needs to provide for an sweep step to
+take place. The second parameter is similar to the envelope direction, it specifies whether the frequency will
+increase or decrease over time. The third parameter specifies the value by which the previous frequency will
+shifted to get a new frequency.
 
-We will maintain three extra values, sweep enabled, shadow frequency and sweep timer.
+We will maintain three extra values called _sweep enabled_, _shadow frequency_ and _sweep timer_.
 
 Now on a sweep clock from the frame sequencer the following steps occur,
 
@@ -227,7 +218,7 @@ if is_decrementing {
     new_frequency = shadow_frequency + new_frequency
 }
 
-// This is called the overflow check.
+/* overflow check */
 if new_frequency > 2047 {
     channel_enabled = false
 }
@@ -257,7 +248,7 @@ if sweep_timer == 0 {
             frequency = new_frequency
             shadow_frequency = new_frequency
 
-            // This is just to run the overflow check again.
+            /* for overflow check */
             calculate_frequency()
         }
     }
@@ -275,12 +266,10 @@ On a trigger event, the following things happen (which also enable sweep)
 
 ## Length Function
 
-Each channel, has a length function associated with it. If this function is enabled, then a
-special timer, called the length timer, disables the channel when a certain time has passed.
-
-For example, in channel two, the length data is stored in the lower `6` bits of NR21.
-
-The length data is extracted, and the length timer is set with the following formula,
+Each channel, has a length function associated with it. If this function is enabled, then a special timer, called
+the length timer, disables the channel when a certain time has passed. For example, in channel two, the length
+data is stored in the lower `6` bits of NR21. The length data is extracted, and the length timer is set with the
+following formula,
 
 ```python
 Length Timer = 64 - Length Data
@@ -288,7 +277,7 @@ Length Timer = 64 - Length Data
 
 Note: Replace `64` with `256` in case of channel three only.
 
-Whenever a length clock is provided by the frame sequencer AND bit 6 of NR24 register
+Whenever a length clock is provided by the frame sequencer AND bit `6` of NR24 register
 is set, the length timer is decremented by one.
 
 If the length timer, (only) as a result of the above decrement reaches the value of zero then
@@ -307,7 +296,7 @@ to playback.
 
 These 4-bit samples are stored in a region called the Wave RAM. This region is located at `$FF30-$FF3F`.
 
-It is a 16 byte region, therefore there are two samples contained within one byte. We play the upper four
+It is a `16` byte region, therefore there are two samples contained within one byte. We play the upper four
 bits of a byte before the lower four.
 
 This channel also provides a volume shift register. This register specifies the amount by which the samples
@@ -328,10 +317,8 @@ This channel as all other channels does have a length function, but no envelope 
 
 ## Channel Four
 
-Channel four is configured to output white noise with envelope.
-
-It has two new registers, the LFSR (Linear Feedback Shift Register) and the polynomial counter. The LFSR is
-15 bits long.
+Channel four is configured to output white noise with envelope. It has two new registers, the LFSR (Linear
+Feedback Shift Register) and the polynomial counter. The LFSR is `15` bits long.
 
 The polynomial register is the control centre of this channel. The following parameters are supplied
 by the register,
@@ -369,8 +356,8 @@ Whenever the frequency timer expires the following operations take place,
 1. The frequency timer is reloaded using the above formula.
 2. The XOR result of the 0th and 1st bit of LFSR is computed.
 3. The LFSR is shifted right by one bit and the above XOR result is
-   stored in the 14th bit.
-4. If the width mode bit is set, the XOR result is also stored in the 6th bit.
+   stored in bit `14`.
+4. If the width mode bit is set, the XOR result is also stored in bit `6`.
 
 In pseudo-code,
 
@@ -388,13 +375,13 @@ if frequency_timer == 0 {
 }
 ```
 
-The amplitude of the channel is simply the 0th bit of LFSR inverted. (Take into account envelope of-course).
+The amplitude of the channel is simply the bit `0` of LFSR inverted. (Take into account envelope of-course).
 
 ```js
 Amplitude = ~LFSR & 0x01;
 ```
 
-On a trigger event, all the bits of LFSR are set to 1.
+On a trigger event, all the bits of LFSR are set to `1`.
 
 ## Simple Mixing and Panning
 
@@ -423,40 +410,35 @@ Left Sample = (ch1 + ch2 + ch3 + ch4) / 4.0
 
 The NR52 can be thought of as the master switch.
 
-If the bit 7 of NR52 is reset, then all of the sound system is immediately shut off. This has the benefit that
-if a game doesn't support audio, then switching off the audio system saves power.
-
-The bottom four bits of the register are the individual channel status bits, and are read only. They describe
-whether the respective channel is enabled or disabled.
+If the bit `7` of NR52 is reset, then all of the sound system is immediately shut off. This has the benefit that
+if a game doesn't support audio, then switching off the audio system saves power. The bottom four bits of the
+register are the individual channel status bits, and are read only. They describe whether the respective channel
+is enabled or disabled.
 
 ## Providing Samples to the Audio Device
 
-Let assume that you maintain a buffer of size `1024` which contains 512 samples of stereo PCM data. (32-bit float PCM).
-
-These samples are interleaved in the audio buffer as,
+Lets assume that you maintain a buffer of size `1024` which contains `512` samples of stereo PCM data. (32-bit
+float PCM). These samples are interleaved in the audio buffer as,
 
 ```ascii
-Left sample, Right sample, Left sample, Right Sample, and so on.
+LR, LR, LR, ...
 ```
 
-Suppose that the sample rate of the audio device is 48000 Hz (48kHz). It means that 48000 samples will be
-pushed to the audio device every second.
-
-Each `CPU FREQUENCY / SAMPLE RATE` T-cycles (roughly 87 T-cycles in this case) we get the
-amplitude from each channel and mix them (see above section).
+Suppose that the sample rate of the audio device is `48000` Hz (48kHz). It means that `48000` samples will be
+pushed to the audio device every second. Each `CPU FREQUENCY / SAMPLE RATE` T-cycles (roughly `87` T-cycles in
+this case) we get the amplitude from each channel and mix them (see above section).
 
 We then use the volume values in NR50 to generate two samples,
 
 ```python
 Left Sample = Left Volume (in NR50) * Left Amplitude
-
 Right Sample = Right Volume (in NR50) * Right Amplitude
 ```
 
-We then interleave those samples in the audio buffer as we described earlier.
+Those samples are then interleaved in the audio buffer as described earlier.
 
 We only run the emulator until the audio buffer is full. We then delay until the already queued samples
-are below a particular threshold (let us say 1 buffer in length) queue these newly generated
+are below a particular threshold (let us say `1` buffer in length) queue these newly generated
 samples and clear our audio buffer. We repeat these steps again and again.
 
 This provides a natural way to accurately synchronize the emulation, while minimizing audio
@@ -493,3 +475,8 @@ especially Simuuz and Dillon.
 I would also like to thank you for reading this article.
 
 Cheers!
+
+## Footnotes
+
+[^1]: The Game Boy only has hardware that can playback mono sound, but you can plug in a headphone for stereo.
+[^2]: The envelope function described further ahead in the post complicates it a little bit.
